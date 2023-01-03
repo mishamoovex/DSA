@@ -107,11 +107,11 @@ public class CustomArray<T> implements Iterable<T> {
         return indexOf(obj) != -1;
     }
 
+    //No concurrent modification check
     @Override
     public Iterator<T> iterator() {
         return new Iterator<>() {
-
-            int index = 0;
+            private int index = 0;
 
             @Override
             public boolean hasNext() {
@@ -127,7 +127,7 @@ public class CustomArray<T> implements Iterable<T> {
 
     @Override
     public String toString() {
-        if (length == 0) {
+        if (isEmpty()) {
             return "[]";
         } else {
             StringBuilder sb = new StringBuilder(length).append("[");
