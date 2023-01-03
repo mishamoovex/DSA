@@ -218,7 +218,7 @@ public class DoublyLinkedList<T> implements Iterable<T>, ListInterface<T> {
                 }
             }
         }
-        //Search for non null object
+        //Search for non-null object
         else {
             for (trav = head; trav != null; trav = trav.next) {
                 if (trav.data.equals(obj)) {
@@ -236,7 +236,7 @@ public class DoublyLinkedList<T> implements Iterable<T>, ListInterface<T> {
     @Override
     public int indexOf(Object obj) {
         int index = 0;
-        Node<T> trav = head;
+        Node<T> trav;
 
         //Support searching for null
         if (obj == null) {
@@ -246,7 +246,7 @@ public class DoublyLinkedList<T> implements Iterable<T>, ListInterface<T> {
                 }
             }
         }
-        //Support for non null object
+        //Support for non-null object
         else {
             for (trav = head; trav != null; trav = trav.next, index++) {
                 if (trav.data.equals(obj)) {
@@ -267,7 +267,7 @@ public class DoublyLinkedList<T> implements Iterable<T>, ListInterface<T> {
 
     @Override
     public Iterator<T> iterator() {
-        return new Iterator<T>() {
+        return new Iterator<>() {
             private Node<T> trav = head;
 
             @Override
