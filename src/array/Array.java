@@ -1,6 +1,6 @@
-package list;
+package array;
 
-public interface ListInterface<T> {
+public interface Array<T> {
 
     int size();
 
@@ -10,25 +10,13 @@ public interface ListInterface<T> {
 
     T get(int index);
 
-    T getFirst();
-
-    T getLast();
-
-    T set(int index, T element);
+    void set(int index, T element);
 
     void add(T element);
-
-    void addFirst(T element);
-
-    void addLast(T element);
 
     boolean remove(Object obj);
 
     T removeAt(int index);
-
-    T removeFirst();
-
-    T removeLast();
 
     int indexOf(Object obj);
 

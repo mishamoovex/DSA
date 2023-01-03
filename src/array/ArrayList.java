@@ -1,40 +1,43 @@
+package array;
+
 import java.util.Iterator;
 
 @SuppressWarnings("unchecked")
-public class CustomArray<T> implements Iterable<T> {
+public class ArrayList<T> implements Iterable<T>, Array<T> {
 
     private T[] arr;
     private int length;   //length user thinks array is
     private int capacity; //actual array size
 
-    public CustomArray() {
-        this(16);
-    }
-
-    public CustomArray(int capacity) {
+    public ArrayList(int capacity) {
         if (capacity < 0) throw new IllegalArgumentException("Illegal capacity:" + capacity);
         this.capacity = capacity;
         arr = (T[]) new Object[capacity];
     }
 
+    @Override
     public int size() {
         return length;
     }
 
-    private boolean isEmpty() {
-        return size() != 0;
+    @Override
+    public boolean isEmpty() {
+        return length > 0;
     }
 
+    @Override
     public T get(int index) {
         if (index >= length) throw new IndexOutOfBoundsException();
         return arr[index];
     }
 
+    @Override
     public void set(int index, T element) {
         if (index >= capacity) throw new IndexOutOfBoundsException();
         arr[index] = element;
     }
 
+    @Override
     public void clear() {
         for (int i = 0; i < capacity; i++) {
             arr[i] = null;
@@ -42,6 +45,7 @@ public class CustomArray<T> implements Iterable<T> {
         length = 0;
     }
 
+    @Override
     public void add(T element) {
         //Time to resize
         if (length + 1 >= capacity) {
@@ -62,6 +66,7 @@ public class CustomArray<T> implements Iterable<T> {
         arr[length++] = element;
     }
 
+    @Override
     public T removeAt(int index) {
         if (index >= length) throw new IndexOutOfBoundsException();
         T data = arr[index];
@@ -84,6 +89,7 @@ public class CustomArray<T> implements Iterable<T> {
         return data;
     }
 
+    @Override
     public boolean remove(Object obj) {
         for (int i = 0; i < length; i++) {
             if (arr[i].equals(obj)) {
@@ -94,6 +100,7 @@ public class CustomArray<T> implements Iterable<T> {
         return false;
     }
 
+    @Override
     public int indexOf(Object obj) {
         for (int i = 0; i < length; i++) {
             if (arr[i].equals(obj)) {
@@ -103,6 +110,7 @@ public class CustomArray<T> implements Iterable<T> {
         return -1;
     }
 
+    @Override
     public boolean contains(Object obj) {
         return indexOf(obj) != -1;
     }
