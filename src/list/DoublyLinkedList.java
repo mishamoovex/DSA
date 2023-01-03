@@ -1,14 +1,15 @@
-import java.util.Iterator;
-import java.util.LinkedList;
+package list;
 
-public class DoublyLinkedList<T> implements Iterable<T> {
+import java.util.Iterator;
+
+public class DoublyLinkedList<T> implements Iterable<T>, ListInterface<T> {
 
     private int size = 0;
     private Node<T> head = null;
     private Node<T> tail = null;
 
     //Internal node class to represent data
-    private class Node<T> {
+    private static class Node<T> {
         T data;
         Node<T> prev, next;
 
@@ -24,14 +25,17 @@ public class DoublyLinkedList<T> implements Iterable<T> {
         }
     }
 
+    @Override
     public int size() {
         return size;
     }
 
+    @Override
     public boolean isEmpty() {
         return size > 0;
     }
 
+    @Override
     public void clear() {
         Node<T> trav = head;
         while (trav != null) {
@@ -67,6 +71,7 @@ public class DoublyLinkedList<T> implements Iterable<T> {
      * @return the element at the specified position in this list
      * @throws IndexOutOfBoundsException {@inheritDoc}
      */
+    @Override
     public T get(int index) {
         checkElementIndex(index);
         return getNode(index).data;
@@ -81,6 +86,7 @@ public class DoublyLinkedList<T> implements Iterable<T> {
      * @return the element previously at the specified position
      * @throws IndexOutOfBoundsException {@inheritDoc}
      */
+    @Override
     public T set(int index, T element) {
         checkElementIndex(index);
         Node<T> x = getNode(index);
@@ -92,6 +98,7 @@ public class DoublyLinkedList<T> implements Iterable<T> {
     /**
      * Add an element to the beginning of thin linked list, O(1)
      */
+    @Override
     public void addFirst(T element) {
         if (isEmpty()) {
             head = tail = new Node<>(element, null, null);
@@ -102,6 +109,7 @@ public class DoublyLinkedList<T> implements Iterable<T> {
         size++;
     }
 
+    @Override
     public void addLast(T element) {
         if (isEmpty()) {
             head = tail = new Node<>(element, null, null);
@@ -112,20 +120,24 @@ public class DoublyLinkedList<T> implements Iterable<T> {
         size++;
     }
 
+    @Override
     public void add(T element) {
         addLast(element);
     }
 
-    public T peekFirst() {
+    @Override
+    public T getFirst() {
         checkNotEmpty();
         return head.data;
     }
 
-    public T peekLast() {
+    @Override
+    public T getLast() {
         checkNotEmpty();
         return tail.data;
     }
 
+    @Override
     public T removeFirst() {
         checkNotEmpty();
         //Extract the data at the head and move the head
@@ -144,6 +156,7 @@ public class DoublyLinkedList<T> implements Iterable<T> {
         return data;
     }
 
+    @Override
     public T removeLast() {
         checkNotEmpty();
 
@@ -181,6 +194,7 @@ public class DoublyLinkedList<T> implements Iterable<T> {
     /**
      * Remove a node at a particular index, O(n)
      */
+    @Override
     public T removeAt(int index) {
         //Make sure the index provided is valid
         checkElementIndex(index);
@@ -191,6 +205,7 @@ public class DoublyLinkedList<T> implements Iterable<T> {
     /**
      * Remove a particular value in the linked list, O(n)
      */
+    @Override
     public boolean remove(Object obj) {
         Node<T> trav;
 
@@ -218,6 +233,7 @@ public class DoublyLinkedList<T> implements Iterable<T> {
     /**
      * Find the index of a particular value in the linked list, 0(n)
      */
+    @Override
     public int indexOf(Object obj) {
         int index = 0;
         Node<T> trav = head;
@@ -244,6 +260,7 @@ public class DoublyLinkedList<T> implements Iterable<T> {
     /**
      * Check is a value contained withing the linked list
      */
+    @Override
     public boolean contains(Object obj) {
         return indexOf(obj) != -1;
     }
