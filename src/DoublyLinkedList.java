@@ -1,4 +1,5 @@
 import java.util.Iterator;
+import java.util.LinkedList;
 
 public class DoublyLinkedList<T> implements Iterable<T> {
 
@@ -41,6 +42,51 @@ public class DoublyLinkedList<T> implements Iterable<T> {
         }
         head = tail = null;
         size = 0;
+    }
+
+    private Node<T> getNode(int index) {
+        int i;
+        Node<T> trav;
+
+        if (index < size / 2) {
+            for (i = 0, trav = head; i < index; i++) {
+                trav = trav.next;
+            }
+        } else {
+            for (i = size - 1, trav = tail; i > index; i--) {
+                trav = trav.prev;
+            }
+        }
+        return trav;
+    }
+
+    /**
+     * Returns the element at the specified position in this list.
+     *
+     * @param index index of the element to return
+     * @return the element at the specified position in this list
+     * @throws IndexOutOfBoundsException {@inheritDoc}
+     */
+    public T get(int index) {
+        checkElementIndex(index);
+        return getNode(index).data;
+    }
+
+    /**
+     * Replaces the element at the specified position in this list with the
+     * specified element.
+     *
+     * @param index   index of the element to replace
+     * @param element element to be stored at the specified position
+     * @return the element previously at the specified position
+     * @throws IndexOutOfBoundsException {@inheritDoc}
+     */
+    public T set(int index, T element) {
+        checkElementIndex(index);
+        Node<T> x = getNode(index);
+        T oldVal = x.data;
+        x.data = element;
+        return oldVal;
     }
 
     /**
@@ -137,23 +183,8 @@ public class DoublyLinkedList<T> implements Iterable<T> {
      */
     public T removeAt(int index) {
         //Make sure the index provided is valid
-        if (index < 0 || index >= size) throw new IllegalArgumentException();
-
-        int i;
-        Node<T> trav;
-
-        //Search from the front of the list
-        if (index < size / 2) {
-            for (i = 0, trav = head; i != index; i++) {
-                trav = trav.next;
-            }
-        }
-        //Search from the back of the list
-        else {
-            for (i = size - 1, trav = tail; i != index; i--) {
-                trav = trav.prev;
-            }
-        }
+        checkElementIndex(index);
+        Node<T> trav = getNode(index);
         return remove(trav);
     }
 
@@ -256,5 +287,18 @@ public class DoublyLinkedList<T> implements Iterable<T> {
 
     private void checkNotEmpty() {
         if (isEmpty()) throw new RuntimeException("Empty list");
+    }
+
+    private void checkElementIndex(int index) {
+        if (!isElementIndex(index)) {
+            throw new IndexOutOfBoundsException();
+        }
+    }
+
+    /**
+     * Tells if the argument is the index of an existing element.
+     */
+    private boolean isElementIndex(int index) {
+        return index >= 0 && index < size;
     }
 }
