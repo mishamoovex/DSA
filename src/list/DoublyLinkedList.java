@@ -33,7 +33,7 @@ public class DoublyLinkedList<T> implements Iterable<T>, ListInterface<T> {
 
     @Override
     public boolean isEmpty() {
-        return size > 0;
+        return size == 0;
     }
 
     @Override
