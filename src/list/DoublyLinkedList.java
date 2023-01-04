@@ -1,6 +1,7 @@
 package list;
 
 import java.util.Iterator;
+import java.util.LinkedList;
 
 public class DoublyLinkedList<T> implements Iterable<T>, ListInterface<T> {
 
@@ -207,20 +208,15 @@ public class DoublyLinkedList<T> implements Iterable<T>, ListInterface<T> {
      */
     @Override
     public boolean remove(Object obj) {
-        Node<T> trav;
-
-        //Support searching for null
         if (obj == null) {
-            for (trav = head; trav != null; trav = trav.next) {
+            for (Node<T> trav = head; trav != null; trav = trav.next) {
                 if (trav.data == null) {
                     remove(trav);
                     return true;
                 }
             }
-        }
-        //Search for non-null object
-        else {
-            for (trav = head; trav != null; trav = trav.next) {
+        } else {
+            for (Node<T> trav = head; trav != null; trav = trav.next) {
                 if (trav.data.equals(obj)) {
                     remove(trav);
                     return true;
