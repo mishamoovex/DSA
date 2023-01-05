@@ -16,12 +16,12 @@ public class ArrayQueue<T> implements Queue<T> {
 
     @Override
     public int size() {
-        return 0;
+        return numberOfElements;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return numberOfElements == 0;
     }
 
     @Override
