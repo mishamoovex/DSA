@@ -138,8 +138,8 @@ public class ArrayList<T> implements Iterable<T>, Array<T> {
         if (isEmpty()) {
             return "[]";
         } else {
-            StringBuilder sb = new StringBuilder(length).append("[");
-            for (int i = 0; i < length - 1; i++) {
+            StringBuilder sb = new StringBuilder().append("[");
+            for (int i = 0; i < length; i++) {
                 if (i != 0) {
                     sb.append(", ");
                 }

@@ -1,19 +1,33 @@
-import list.LinkedList;
+import queue.ArrayQueue;
+import queue.ListQueue;
+import queue.Queue;
 
 public class Main {
     public static void main(String[] args) {
 
-        LinkedList<String> customList = new LinkedList<>();
-        customList.add("1");
-        customList.add("2");
-        customList.add("3");
-        customList.add("4");
+        Queue<Integer> custom = new ArrayQueue<>(3);
+        System.out.println(custom);
 
-        System.out.println(customList);
+        custom.enqueue(1);
+        custom.enqueue(2);
+        custom.enqueue(3);
 
-        customList.removeAt(2);
+        System.out.println(custom);
 
-        System.out.println("remove item: " + customList);
+        custom.dequeue();
 
+        System.out.println(custom);
+
+        custom.dequeue();
+
+        System.out.println(custom);
+
+        custom.enqueue(4);
+
+        System.out.println(custom);
+
+        custom.dequeue();
+
+        System.out.println(custom);
     }
 }
