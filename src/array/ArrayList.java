@@ -22,7 +22,7 @@ public class ArrayList<T> implements Iterable<T>, Array<T> {
 
     @Override
     public boolean isEmpty() {
-        return length > 0;
+        return length <= 0;
     }
 
     @Override
@@ -48,17 +48,13 @@ public class ArrayList<T> implements Iterable<T>, Array<T> {
     @Override
     public void add(T element) {
         //Time to resize
-        if (length + 1 >= capacity) {
+        if (length >= capacity) {
             //Increase the array capacity
-            if (capacity == 0) {
-                capacity = 1;
-            } else {
-                capacity *= 2;
-            }
+            capacity *= 2;
             //Create a new array with increased capacity
             T[] new_arr = (T[]) new Object[capacity];
             //Copy elements from the old array to the new one
-            if (length >= 0) System.arraycopy(arr, 0, new_arr, 0, length);
+            System.arraycopy(arr, 0, new_arr, 0, length);
             //Replace the array with the new one
             arr = new_arr;
         }
@@ -74,13 +70,10 @@ public class ArrayList<T> implements Iterable<T>, Array<T> {
         //Initialize a new array with
         T[] new_arr = (T[]) new Object[length - 1];
         //Copy elements from the old array to the new one
-        for (int i = 0, j = 0; i < length; i++, j++) {
+        for (int i = 0, j = 0; i < length; i++) {
             //Skip over the remove index by fixing j
-            if (i == index) {
-                j--;
-            } else {
-                new_arr[j] = arr[i];
-            }
+            if (i == index) continue;
+            new_arr[j++] = arr[i];
         }
         //Replace the array with the new one
         arr = new_arr;
@@ -91,13 +84,13 @@ public class ArrayList<T> implements Iterable<T>, Array<T> {
 
     @Override
     public boolean remove(Object obj) {
-        for (int i = 0; i < length; i++) {
-            if (arr[i].equals(obj)) {
-                removeAt(i);
-                return true;
-            }
+        int index = indexOf(obj);
+        if (index != -1) {
+            removeAt(index);
+            return true;
+        } else {
+            return false;
         }
-        return false;
     }
 
     @Override
