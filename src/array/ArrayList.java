@@ -1,5 +1,6 @@
 package array;
 
+import java.util.Arrays;
 import java.util.Iterator;
 
 @SuppressWarnings("unchecked")
@@ -57,6 +58,9 @@ public class ArrayList<T> implements Iterable<T>, Array<T> {
             System.arraycopy(arr, 0, new_arr, 0, length);
             //Replace the array with the new one
             arr = new_arr;
+
+            //As an alternative using util function
+            //arr = Arrays.copyOf(arr, ++capacity);
         }
         //Add an element to the array and increment length
         arr[length++] = element;
