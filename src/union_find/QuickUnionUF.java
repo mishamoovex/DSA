@@ -1,10 +1,9 @@
 package union_find;
 
-
 import java.util.Scanner;
 
 /**
- * The {@code QuickFindUF} class represents a <em>union–find data type</em>
+ * The {@code QuickUnionUF} class represents a <em>union–find data type</em>
  * (also known as the <em>disjoint-sets data type</em>).
  * It supports the classic <em>union</em> and <em>find</em> operations,
  * along with a <em>count</em> operation that returns the total number
@@ -36,17 +35,17 @@ import java.util.Scanner;
  * itself changes during a call to <em>union</em>&mdash;it cannot
  * change during a call to either <em>find</em> or <em>count</em>.
  * p>
- * This implementation uses <em>quick find</em>.
- * The constructor takes &Theta;(<em>n</em>) time, where <em>n</em>
- * is the number of sites.
- * The <em>find</em>, <em>connected</em>, and <em>count</em>
- * operations take &Theta;(1) time; the <em>union</em> operation
- * takes &Theta;(<em>n</em>) time.
+ * This implementation uses <em>quick union</em>.
+ * The constructor takes &Theta;(<em>n</em>) time, where
+ * <em>n</em> is the number of sites.
+ * The <em>union</em> and <em>find</em> operations take
+ * &Theta;(<em>n</em>) time in the worst case.
+ * The <em>count</em> operation takes &Theta;(1) time.
  */
-public class QuickFindUF implements UF {
+public class QuickUnionUF implements UF {
 
-    private final int[] id;    // id[i] = component identifier of i
-    private int count;         // number of components
+    private final int[] parent;  // parent[i] = parent of i
+    private int count;     // number of components
 
     /**
      * Initializes an empty union-find data structure with
@@ -56,12 +55,13 @@ public class QuickFindUF implements UF {
      * @param n the number of elements
      * @throws IllegalArgumentException if {@code n < 0}
      */
-    public QuickFindUF(int n) {
+    public QuickUnionUF(int n) {
         checkCapacity(n);
         count = n;
-        id = new int[n];
+        parent = new int[n];
+
         for (int i = 0; i < n; i++) {
-            id[i] = i;
+            parent[i] = i;
         }
     }
 
@@ -75,7 +75,10 @@ public class QuickFindUF implements UF {
     @Override
     public int find(int p) {
         checkElementIndex(p);
-        return id[p];
+        while (p != parent[p]) {
+            p = parent[p];
+        }
+        return p;
     }
 
     /**
@@ -84,22 +87,17 @@ public class QuickFindUF implements UF {
      *
      * @param p one element
      * @param q the other element
-     * @throws IllegalArgumentException unless both {@code 0 <= p < n} and {@code 0 <= q < n}
+     * @throws IllegalArgumentException unless
+     *                                  both {@code 0 <= p < n} and {@code 0 <= q < n}
      */
     @Override
     public void union(int p, int q) {
-        checkElementIndex(p);
-        checkElementIndex(q);
+        int pRoot = find(p);
+        int qRoot = find(q);
 
-        int pId = find(p);
-        int qId = find(q);
+        if (pRoot == qRoot) return;
 
-        if (pId == qId) return;
-
-        //Override p indices with q indices
-        for (int i = 0; i < id.length; i++) {
-            if (i == pId) id[i] = qId;
-        }
+        parent[pRoot] = qRoot;
         count--;
     }
 
@@ -110,7 +108,8 @@ public class QuickFindUF implements UF {
      * @param q the other element
      * @return {@code true} if {@code p} and {@code q} are in the same set;
      * {@code false} otherwise
-     * @throws IllegalArgumentException unless both {@code 0 <= p < n} and {@code 0 <= q < n}
+     * @throws IllegalArgumentException unless
+     *                                  both {@code 0 <= p < n} and {@code 0 <= q < n}
      */
     @Override
     public boolean connected(int p, int q) {
@@ -127,16 +126,15 @@ public class QuickFindUF implements UF {
         return count;
     }
 
-    private void checkElementIndex(int p) {
-        int n = id.length;
-        if (p < 0 || p >= n) {
-            throw new IllegalArgumentException("index " + p + " is not between 0 and " + (n - 1));
+    private void checkCapacity(int capacity) {
+        if (capacity <= 0) {
+            throw new IllegalArgumentException("Number of elements should be greater than 0");
         }
     }
 
-    private void checkCapacity(int capacity) {
-        if (capacity <= 0) {
-            throw new IllegalArgumentException("Size <= 0 not allowed");
+    private void checkElementIndex(int index) {
+        if (index < 0 || index >= parent.length) {
+            throw new IndexOutOfBoundsException();
         }
     }
 
