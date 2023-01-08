@@ -1,6 +1,8 @@
 package union_find;
 
 
+import java.util.Scanner;
+
 /**
  * The {@code QuickFindUF} class represents a <em>union–find data type</em>
  * (also known as the <em>disjoint-sets data type</em>).
@@ -135,6 +137,29 @@ public class QuickFindUF implements UF {
     private void checkCapacity(int capacity) {
         if (capacity <= 0) {
             throw new IllegalArgumentException("Size <= 0 not allowed");
+        }
+    }
+
+    /**
+     * Reads an integer {@code n} and a sequence of pairs of integers
+     * (between {@code 0} and {@code n-1}) from standard input, where each integer
+     * in the pair represents some element;
+     * if the elements are in different sets, merge the two sets
+     * and print the pair to standard output.
+     *
+     * @param args the command-line arguments
+     */
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int n = scanner.nextInt();
+        QuickFindUF uf = new QuickFindUF(n);
+        while (scanner.hasNext()) {
+            int p = scanner.nextInt();
+            int q = scanner.nextInt();
+            if (uf.find(p) == uf.find(q)) continue;
+            uf.union(p, q);
+            System.out.println(p + " " + q);
+            System.out.println(uf.count() + " components");
         }
     }
 
