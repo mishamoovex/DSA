@@ -144,32 +144,43 @@ public class DoublyLinkedList<T> implements Iterable<T>, ListInterface<T> {
         //Extract the data at the head and move the head
         //pointer forwards one node
         T data = head.data;
-        head = head.next;
-        --size;
-
-        if (isEmpty()) {
-            //If the list is empty set the tail to null as well
+        Node<T> new_head = head.next;
+        head.data = null;
+        head.next = null;
+        head = new_head;
+        //If the list is empty set the tail to null as well
+        if (head == null) {
+            tail.data = null;
             tail = null;
-        } else {
-            //Do the memory clean up of the previous(removed) node
+        }
+        //Do the memory clean up of the previous(removed) node
+        else {
             head.prev = null;
         }
+        size--;
         return data;
     }
 
     @Override
     public T removeLast() {
         checkNotEmpty();
-
+        //Extract the data at the tail and move the head
+        //pointer backwards one node
         T data = tail.data;
-        tail = tail.prev;
-        --size;
-
-        if (isEmpty()) {
+        Node<T> new_tail = tail.prev;
+        tail.data = null;
+        tail.prev = null;
+        tail = new_tail;
+        //If the list is empty set head to null as well
+        if (tail == null) {
+            head.data = null;
             head = null;
-        } else {
+        }
+        //Do the memory clean up of the next(removed) node
+        else {
             tail.next = null;
         }
+        size--;
         return data;
     }
 
