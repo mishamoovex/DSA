@@ -2,13 +2,13 @@ package queue;
 
 public interface Queue<T> {
 
-    public void enqueue(T elem);
+    int size();
 
-    public T dequeue();
+    boolean isEmpty();
 
-    public T peek();
+    void enqueue(T elem);
 
-    public int size();
+    T dequeue();
 
-    public boolean isEmpty();
+    T peek();
 }

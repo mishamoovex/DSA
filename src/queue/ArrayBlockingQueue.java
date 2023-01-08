@@ -1,14 +1,14 @@
 package queue;
 
 @SuppressWarnings("unchecked")
-public class ArrayQueue<T> implements Queue<T> {
+public class ArrayBlockingQueue<T> implements Queue<T> {
 
     private int front;
     private int back;
     private int numberOfElements;
     private final T[] data;
 
-    public ArrayQueue(int capacity) {
+    public ArrayBlockingQueue(int capacity) {
         data = (T[]) new Object[capacity];
         front = 0;
         back = 0;
