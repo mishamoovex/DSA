@@ -1,20 +1,20 @@
 package union_find;
 
-public class ArrayUnionFind {
+public class UnionFind {
 
     //The number of elements in this union find
-    private int size;
+    private final int size;
 
     //Used to track the sizes of each of the components
-    private int[] sz;
+    private final int[] sz;
 
     //id[i] points to the parent of i, if id[id] = i then i is a root node
-    private int[] id;
+    private final int[] id;
 
     //Tracks the number of components in the union find
     private int n;
 
-    public ArrayUnionFind(int size) {
+    public UnionFind(int size) {
         if (size <= 0) throw new IllegalArgumentException("Size <= 0 is not allowed");
 
         this.size = n = size;
@@ -33,9 +33,12 @@ public class ArrayUnionFind {
         int root = p;
         while (root != id[root]) {
             root = id[root];
+            //An alternative to "two pass compression" - "one path variant"
+            //Make every other point in path point to its grandparent
+            //root = id[id[root]];
         }
         //Compress the path leading back to the root.
-        //Doing this operation is called "path compression"
+        //Doing this operation is called "two path compression"
         //and is what gives us amortized constant time complexity
         while (p != root) {
             int next = id[p];
@@ -67,7 +70,7 @@ public class ArrayUnionFind {
     }
 
     //Unify the components/sets containing elements 'p' and 'q'
-    public void unify(int p, int q) {
+    public void union(int p, int q) {
         int root1 = find(p);
         int root2 = find(q);
         //These elements are already in the same group!
