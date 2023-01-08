@@ -143,10 +143,7 @@ public class LinkedList<T> implements ListInterface<T>, Iterable<T> {
             Node<T> tmp = trav2;
             trav2 = trav2.next;
             trav1.next = trav2;
-            //Reset tail if there no nodes after deleted node
-            if (trav2 == null) {
-                tail = trav1;
-            }
+
             T removedElement = tmp.data;
             tmp.data = null;
             tmp.next = null;
@@ -176,16 +173,18 @@ public class LinkedList<T> implements ListInterface<T>, Iterable<T> {
     @Override
     public T removeLast() {
         checkNotEmpty();
+        T removedElement = tail.data;
         if (head.next == null) {
             head.data = null;
             head = null;
+            tail.data = null;
+            tail = null;
         } else {
-            Node<T> preEndNode = getNode(size - 2);
-            preEndNode.next = null;
+            Node<T> new_tail = getNode(size - 2);
+            new_tail.next = null;
+            tail.data = null;
+            tail = new_tail;
         }
-        T removedElement = tail.data;
-        tail.data = null;
-        tail = null;
         size--;
         return removedElement;
     }
