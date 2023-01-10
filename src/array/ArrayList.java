@@ -1,88 +1,83 @@
 package array;
 
-import java.util.Arrays;
 import java.util.Iterator;
 
 @SuppressWarnings("unchecked")
 public class ArrayList<T> implements Iterable<T>, Array<T> {
 
+    private static final int DEFAULT_CAPACITY = 2;
+
     private T[] arr;
-    private int length;   //length user thinks array is
-    private int capacity; //actual array size
+    private int n;
 
     public ArrayList(int capacity) {
         if (capacity < 0) throw new IllegalArgumentException("Illegal capacity:" + capacity);
-        this.capacity = capacity;
         arr = (T[]) new Object[capacity];
+    }
+
+    public ArrayList() {
+        arr = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public int size() {
-        return length;
+        return n;
     }
 
     @Override
     public boolean isEmpty() {
-        return length <= 0;
+        return n == 0;
     }
 
     @Override
     public T get(int index) {
-        if (index >= length) throw new IndexOutOfBoundsException();
+        checkElementIndex(index);
         return arr[index];
     }
 
     @Override
     public void set(int index, T element) {
-        if (index >= capacity) throw new IndexOutOfBoundsException();
+        checkElementIndex(index);
         arr[index] = element;
     }
 
     @Override
     public void clear() {
-        for (int i = 0; i < capacity; i++) {
+        for (int i = 0; i < arr.length; i++) {
             arr[i] = null;
         }
-        length = 0;
+        n = 0;
     }
 
     @Override
     public void add(T element) {
         //Time to resize
-        if (length >= capacity) {
-            //Increase the array capacity
-            capacity *= 2;
-            //Create a new array with increased capacity
-            T[] new_arr = (T[]) new Object[capacity];
-            //Copy elements from the old array to the new one
-            System.arraycopy(arr, 0, new_arr, 0, length);
-            //Replace the array with the new one
-            arr = new_arr;
-
-            //As an alternative using util function
-            //arr = Arrays.copyOf(arr, ++capacity);
+        if (n == arr.length) {
+            resize(arr.length * 2);
         }
-        //Add an element to the array and increment length
-        arr[length++] = element;
+        //Add an element to the array and increment number of elements
+        arr[n++] = element;
+    }
+
+    private void resize(int capacity) {
+        T[] copy = (T[]) new Object[capacity];
+        for (int i = 0; i < n; i++) {
+            copy[i] = arr[i];
+        }
+        arr = copy;
     }
 
     @Override
     public T removeAt(int index) {
-        if (index >= length) throw new IndexOutOfBoundsException();
+        checkElementIndex(index);
+        //Remove
         T data = arr[index];
-
-        //Initialize a new array with
-        T[] new_arr = (T[]) new Object[length - 1];
-        //Copy elements from the old array to the new one
-        for (int i = 0, j = 0; i < length; i++) {
-            //Skip over the remove index by fixing j
-            if (i == index) continue;
-            new_arr[j++] = arr[i];
+        arr[index] = null;
+        n--;
+        //Halve size of the array when the array is one-quarter full. (25% of 100%)
+        if (n > 0 && n == arr.length / 4) {
+            resize(arr.length / 2);
         }
-        //Replace the array with the new one
-        arr = new_arr;
-        //Update length and capacity
-        capacity = --length;
         return data;
     }
 
@@ -99,7 +94,7 @@ public class ArrayList<T> implements Iterable<T>, Array<T> {
 
     @Override
     public int indexOf(Object obj) {
-        for (int i = 0; i < length; i++) {
+        for (int i = 0; i < n; i++) {
             if (arr[i].equals(obj)) {
                 return i;
             }
@@ -120,7 +115,7 @@ public class ArrayList<T> implements Iterable<T>, Array<T> {
 
             @Override
             public boolean hasNext() {
-                return index < length;
+                return index < n;
             }
 
             @Override
@@ -136,13 +131,19 @@ public class ArrayList<T> implements Iterable<T>, Array<T> {
             return "[]";
         } else {
             StringBuilder sb = new StringBuilder().append("[");
-            for (int i = 0; i < length; i++) {
+            for (int i = 0; i < n; i++) {
                 if (i != 0) {
                     sb.append(", ");
                 }
                 sb.append(arr[i]);
             }
             return sb.append("]").toString();
+        }
+    }
+
+    private void checkElementIndex(int index) {
+        if (index < 0 || index >= n) {
+            throw new IndexOutOfBoundsException();
         }
     }
 }
