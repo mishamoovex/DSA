@@ -11,7 +11,7 @@ public class OptimizedPriorityQueue<T extends Comparable<T>> {
     private int heapCapacity = 0;
 
     //A dynamic list ot track the elements inside the heap
-    private List<T> heap;
+    private final List<T> heap;
 
     //This map keeps track of the possible indices a particular
     //node value is found in the heap. Having this mapping lets
@@ -126,7 +126,7 @@ public class OptimizedPriorityQueue<T extends Comparable<T>> {
     private void swim(int k) {
         //Grav the index of the next parent node WRT to k
         int parent = (k - 1) / 2;
-        //Keep whimming while we have not reached the
+        //Keep swimming while we have not reached the
         //root and while we're less than our parent.
         while (k > 0 && less(k, parent)) {
             //Exchange k with the parent
@@ -143,7 +143,7 @@ public class OptimizedPriorityQueue<T extends Comparable<T>> {
         while (true) {
 
             int left = 2 * k + 1;  //Left node
-            int right = 2 * k + 1; //Right node
+            int right = 2 * k + 2; //Right node
             int smallest = left;   //Assume left is the smallest node of the two children
 
             //Find is smaller left or right
@@ -181,7 +181,7 @@ public class OptimizedPriorityQueue<T extends Comparable<T>> {
         //for (int i = 0; i < heapSize; i++) {
         //    if (heap.get(i).equals(element)) {
         //        removeAt(i);
-        //        return false;
+        //        return true;
         //    }
         //}
 
@@ -285,6 +285,28 @@ public class OptimizedPriorityQueue<T extends Comparable<T>> {
 
         //Recurse on both children to make sure they're also valid heaps
         return isMinHeap(left) && isMinHeap(right);
+    }
+
+    public static void main(String[] args) {
+        Integer[] data = new Integer[10];
+        data[0] = 2;
+        data[1] = 3;
+        data[2] = 1;
+        data[3] = 10;
+        data[4] = 4;
+        data[5] = 9;
+        data[6] = 5;
+        data[7] = 7;
+        data[8] = 6;
+        data[9] = 8;
+
+        System.out.println(Arrays.toString(data));
+
+        OptimizedPriorityQueue<Integer> queue = new OptimizedPriorityQueue<>(data);
+
+        System.out.println(queue);
+
+        System.out.println(queue.isMinHeap(0));
     }
 
 
