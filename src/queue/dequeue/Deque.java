@@ -1,4 +1,4 @@
-package dequeue;
+package queue.dequeue;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;

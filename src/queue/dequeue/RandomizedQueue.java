@@ -1,4 +1,4 @@
-package dequeue;
+package queue.dequeue;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -141,7 +141,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     }
 
     public static void main(String[] args) {
-        RandomizedQueue<Integer> custom = new RandomizedQueue<>();
+        RandomizedQueue<Integer> custom = new RandomizedQueue<Integer>();
         custom.enqueue(1);
         custom.enqueue(2);
         custom.enqueue(3);

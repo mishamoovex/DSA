@@ -1,8 +1,8 @@
-package queue;
+package queue.priority;
 
 import java.util.*;
 
-public class OptimizedHeapPriorityQueue<T extends Comparable<T>> {
+public class OptimizedPriorityQueue<T extends Comparable<T>> {
 
     //The number of elements currently inside the heap
     private int heapSize = 0;
@@ -20,18 +20,18 @@ public class OptimizedHeapPriorityQueue<T extends Comparable<T>> {
     private final Map<T, TreeSet<Integer>> map = new HashMap<>();
 
     //Constructs a priority queue with an initial capacity
-    public OptimizedHeapPriorityQueue(int size) {
+    public OptimizedPriorityQueue(int size) {
         heap = new ArrayList<>(size);
     }
 
     //Constructs and initially empty priority queue
-    public OptimizedHeapPriorityQueue() {
+    public OptimizedPriorityQueue() {
         this(1);
     }
 
     // Construct a priority queue using heapify in O(n) time, a great explanation can be found at:
     // http://www.cs.umd.edu/~meesh/351/mount/lectures/lect14-heapsort-analysis-part.pdf
-    public OptimizedHeapPriorityQueue(T[] elements) {
+    public OptimizedPriorityQueue(T[] elements) {
         heapSize = heapCapacity = elements.length;
         heap = new ArrayList<>(heapCapacity);
         //Place all element in heap
@@ -46,7 +46,7 @@ public class OptimizedHeapPriorityQueue<T extends Comparable<T>> {
     }
 
     //Priority queue construction, O(log(n))
-    public OptimizedHeapPriorityQueue(Collection<T> elements) {
+    public OptimizedPriorityQueue(Collection<T> elements) {
         this(elements.size());
         for (T elem : elements) add(elem);
     }
