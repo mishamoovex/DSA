@@ -287,6 +287,17 @@ public class OptimizedPriorityQueue<T extends Comparable<T>> {
         return isMinHeap(left) && isMinHeap(right);
     }
 
+    /*
+            .
+            1
+        .       .
+        3       2
+     .    .   .   .
+     6    4   9   5
+   .   .  .
+   7  10  8
+
+     */
     public static void main(String[] args) {
         Integer[] data = new Integer[10];
         data[0] = 2;
@@ -302,10 +313,9 @@ public class OptimizedPriorityQueue<T extends Comparable<T>> {
 
         System.out.println(Arrays.toString(data));
 
-        OptimizedPriorityQueue<Integer> queue = new OptimizedPriorityQueue<>(data);
+        ArrayPriorityQueue<Integer> queue = new ArrayPriorityQueue<>(data);
 
         System.out.println(queue);
-
         System.out.println(queue.isMinHeap(0));
     }
 

@@ -222,6 +222,17 @@ public class ArrayPriorityQueue<T extends Comparable<T>> implements PriorityQueu
         return isMinHeap(left) && isMinHeap(right);
     }
 
+    /*
+            .
+            1
+        .       .
+        3       2
+     .    .   .   .
+     6    4   9   5
+   .   .  .
+   7  10  8
+
+     */
     public static void main(String[] args) {
         Integer[] data = new Integer[10];
         data[0] = 2;
@@ -241,7 +252,5 @@ public class ArrayPriorityQueue<T extends Comparable<T>> implements PriorityQueu
 
         System.out.println(queue);
         System.out.println(queue.isMinHeap(0));
-
-
     }
 }
