@@ -6,8 +6,33 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+class Entry<K, V> {
+
+    int hash;
+    K key;
+    V value;
+
+    public Entry(K key, V value) {
+        this.key = key;
+        this.value = value;
+        hash = key.hashCode();
+    }
+
+    //We are not overriding the Object equals method
+    //no casting is required with this method
+    public boolean equals(Entry<K, V> other) {
+        if (hash != other.hash) return false;
+        return key.equals(other.key);
+    }
+
+    @Override
+    public String toString() {
+        return key + " => " + value;
+    }
+}
+
 @SuppressWarnings("unchecked")
-public class HashTableSeparateChaining<K, V> implements Iterable<V> {
+public class HashTableSeparateChaining<K, V> implements Iterable<V>, HashTable<K, V> {
 
     private static final int DEFAULT_CAPACITY = 3;
     private static final double DEFAULT_LOAD_FACTOR = 0.75;
@@ -44,16 +69,19 @@ public class HashTableSeparateChaining<K, V> implements Iterable<V> {
     }
 
     //Returns the number of elements currently inside the hash-table
+    @Override
     public int size() {
         return size;
     }
 
     //Returns true/false depending on whether the hash-table is empty
+    @Override
     public boolean isEmpty() {
         return size == 0;
     }
 
     //Clears all the contents of the hash-table
+    @Override
     public void clear() {
         for (int i = 0, len = table.length; i < len; i++) {
             table[i] = null;
@@ -61,24 +89,29 @@ public class HashTableSeparateChaining<K, V> implements Iterable<V> {
         size = 0;
     }
 
+    @Override
     public boolean containsKey(K key) {
         return hasKey(key);
     }
 
     //Returns true/false depending on whether a key is in the hash table
+    @Override
     public boolean hasKey(K key) {
         int bucketIndex = normalizeIndex(key.hashCode());
         return bucketSeekEntry(bucketIndex, key) != null;
     }
 
+    @Override
     public V put(K key, V value) {
         return insert(key, value);
     }
 
+    @Override
     public V add(K key, V value) {
         return insert(key, value);
     }
 
+    @Override
     public V insert(K key, V vale) {
         if (key == null) {
             throw new IllegalArgumentException("Null key");
@@ -91,6 +124,7 @@ public class HashTableSeparateChaining<K, V> implements Iterable<V> {
     //Gets a key's values from the map and returns the value.
     //NOTE: returns null if the value is null AND also returns
     //null if the key doesn't exist
+    @Override
     public V get(K key) {
         if (key == null) {
             return null;
@@ -104,6 +138,7 @@ public class HashTableSeparateChaining<K, V> implements Iterable<V> {
     //Removes a key form the map and returns the value.
     //NOTE: returns null if the value is null AND also returns
     //null if the key doesn't exist
+    @Override
     public V remove(K key) {
         if (key == null) {
             return null;
@@ -114,6 +149,7 @@ public class HashTableSeparateChaining<K, V> implements Iterable<V> {
     }
 
     //Returns the list of keys found withing the hash table
+    @Override
     public List<K> keys() {
         List<K> keys = new ArrayList<>();
         for (LinkedList<Entry<K, V>> bucket : table) {
@@ -127,6 +163,7 @@ public class HashTableSeparateChaining<K, V> implements Iterable<V> {
     }
 
     //Returns the list of values found withing the hash table
+    @Override
     public List<V> values() {
         List<V> values = new ArrayList<>();
         for (LinkedList<Entry<K, V>> bucket : table) {
