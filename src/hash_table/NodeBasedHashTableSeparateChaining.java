@@ -1,7 +1,9 @@
 package hash_table;
 
+import java.util.Iterator;
+
 @SuppressWarnings("unchecked")
-public class NodeBasedHashTableSeparateChaining<K, V> implements Hashable<K, V> {
+public class NodeBasedHashTableSeparateChaining<K, V> implements Hashable<K, V>, Iterable<V> {
 
     private static class EntryNode<K, V> {
         final int hash;
@@ -86,7 +88,7 @@ public class NodeBasedHashTableSeparateChaining<K, V> implements Hashable<K, V> 
         while (head != null) {
             EntryNode<K, V> next = head.next;
             head.next = null;
-            next.value = null;
+            head.value = null;
             head = next;
         }
     }
@@ -151,25 +153,46 @@ public class NodeBasedHashTableSeparateChaining<K, V> implements Hashable<K, V> 
         //Otherwise create a new bucket with the given key and value
         else {
             table[bucketIndex] = new EntryNode<>(key, value, null);
-            if (++size >= threshold) resizeTable();
         }
+        //Increase the size of the table and resize it if the data size reached the threshold
+        if (++size >= threshold) resizeTable(table.length * 2);
         //Returns null if a new item has been added to the table
         return null;
     }
 
-    private void resizeTable() {
-        capacity *= 2;
+    private void resizeTable(int capacity) {
+        //Update the capacity and the threshold
+        this.capacity = capacity;
         threshold = (int) (maxLoadFactor * capacity);
-
-        EntryNode<K, V>[] copy = (EntryNode<K, V>[]) new EntryNode[capacity];
-
+        //Create a table with updated capacity
+        EntryNode<K, V>[] newTable = (EntryNode<K, V>[]) new EntryNode[capacity];
+        //Iterate through each bucket in the old table and copy it
         for (int i = 0; i < table.length; i++) {
-
+            //Check if the entry by the given index exists in the original table
+            EntryNode<K, V> entry = table[i];
+            //If the entry exists we need to copy it to the newTable
+            while (entry != null) {
+                //Calculates the hash to get a bucked from the newTable if its exists
+                int hashIndex = normalizeIndex(entry.hash);
+                EntryNode<K, V> bucket = newTable[hashIndex];
+                //If there is no bucket with by the given hash -> set it from the old table
+                if (bucket == null) {
+                    newTable[hashIndex] = entry;
+                } else {
+                    //Otherwise iterate through the bucket and add it at the tail
+                    while (bucket.next != null) {
+                        bucket = bucket.next;
+                    }
+                    bucket.next = entry;
+                }
+                //Move to the next entry from the old table bucket
+                entry = entry.next;
+            }
+            //To avoid memory leaks clear the data from the old bucked
+            //and remove it form the old table
+            table[i] = null;
         }
-    }
-
-    private EntryNode<K,V> copyBucket(EntryNode<K,V> origin){
-        EntryNode<K,V> damy = new  EntryNode()
+        table = newTable;
     }
 
     @Override
@@ -181,6 +204,40 @@ public class NodeBasedHashTableSeparateChaining<K, V> implements Hashable<K, V> 
     public V remove(Object key) {
         return null;
     }
+
+    @Override
+    public Iterator<V> iterator() {
+        return null;
+    }
+
+    @Override
+    public String toString() {
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("{");
+        for (int i = 0; i < capacity; i++) {
+            EntryNode<K, V> bucket = table[i];
+            if (bucket != null) {
+                sb.append(toString(bucket)).append(", ");
+            }
+        }
+        sb.append("}");
+        return sb.toString();
+    }
+
+    private String toString(EntryNode<K, V> bucket) {
+        StringBuilder sb = new StringBuilder().append("[");
+        EntryNode<K, V> trav = bucket;
+        while (trav != null) {
+            sb.append(trav);
+            trav = trav.next;
+            if (trav != null) {
+                sb.append(", ");
+            }
+        }
+        return sb.append("]").toString();
+    }
+
 
     /**
      * Converts hash value to an index. Essentially, this strips the
@@ -194,7 +251,8 @@ public class NodeBasedHashTableSeparateChaining<K, V> implements Hashable<K, V> 
      * will always be positive.
      */
     private int normalizeIndex(int hashCode) {
-        return (hashCode & 0x7FFFFFFF) % capacity;
+       // return (hashCode & 0x7FFFFFFF) % capacity;
+        return (hashCode % 2) == 0 ? 1 : 2;
     }
 
     private EntryNode<K, V> bucketSeekEntry(K key) {
@@ -218,5 +276,25 @@ public class NodeBasedHashTableSeparateChaining<K, V> implements Hashable<K, V> 
 
     private void checkValueNotNull(V value) {
         if (value == null) throw new NullPointerException("Nullable values is not allowed");
+    }
+
+    public static void main(String[] args) {
+        NodeBasedHashTableSeparateChaining<Integer, Integer> custom = new NodeBasedHashTableSeparateChaining<>(4);
+
+        for (int i = 0; i < 10; i++) {
+            custom.put(i, i);
+        }
+
+        System.out.println(custom);
+
+        System.out.println("Is empty: " + custom.isEmpty());
+
+        custom.clear();
+
+        System.out.println(custom);
+
+        System.out.println("Is empty: " + custom.isEmpty());
+
+
     }
 }
