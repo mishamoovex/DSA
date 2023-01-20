@@ -7,7 +7,7 @@ import java.util.*;
 
 
 @SuppressWarnings("unchecked")
-public class HashTableSeparateChaining<K, V> implements Iterable<K> {
+public class ListBasedHashTableSeparateChaining<K, V> implements Iterable<K> {
 
     private static class Entry<K, V> {
 
@@ -41,16 +41,16 @@ public class HashTableSeparateChaining<K, V> implements Iterable<K> {
     private int capacity, threshold, size = 0;
     private LinkedList<Entry<K, V>>[] table;
 
-    public HashTableSeparateChaining() {
+    public ListBasedHashTableSeparateChaining() {
         this(DEFAULT_CAPACITY, DEFAULT_LOAD_FACTOR);
     }
 
-    public HashTableSeparateChaining(int capacity) {
+    public ListBasedHashTableSeparateChaining(int capacity) {
         this(capacity, DEFAULT_LOAD_FACTOR);
     }
 
     // Designated constructor
-    public HashTableSeparateChaining(int capacity, double maxLoadFactor) {
+    public ListBasedHashTableSeparateChaining(int capacity, double maxLoadFactor) {
         if (capacity < 0) throw new IllegalArgumentException("Illegal capacity");
         if (maxLoadFactor <= 0 || Double.isNaN(maxLoadFactor) || Double.isInfinite(maxLoadFactor))
             throw new IllegalArgumentException("Illegal maxLoadFactor");
@@ -277,9 +277,9 @@ public class HashTableSeparateChaining<K, V> implements Iterable<K> {
         sb.append("}");
         return sb.toString();
     }
-    
+
     public static void main(String[] args) {
-        HashTableSeparateChaining<TestKey, TestValue> custom = new HashTableSeparateChaining<>(100);
+        ListBasedHashTableSeparateChaining<TestKey, TestValue> custom = new ListBasedHashTableSeparateChaining<>(100);
 
         for (int i = 0; i < 20; i++) {
             custom.put(new TestKey(i), new TestValue(i));
