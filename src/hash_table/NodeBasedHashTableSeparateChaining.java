@@ -1,5 +1,8 @@
 package hash_table;
 
+import hash_table.test_data.TestKey;
+import hash_table.test_data.TestValue;
+
 import java.util.Iterator;
 
 @SuppressWarnings("unchecked")
@@ -125,7 +128,7 @@ public class NodeBasedHashTableSeparateChaining<K, V> implements Hashable<K, V>,
         int hash = key.hashCode();
         int index = normalizeIndex(hash);
         for (Entry<K, V> e = table[index]; e != null; e = e.next) {
-            if (e.hash == hash && e.value.equals(key)) {
+            if (e.key.equals(key)) {
                 return e.value;
             }
         }
@@ -139,7 +142,7 @@ public class NodeBasedHashTableSeparateChaining<K, V> implements Hashable<K, V>,
         int hash = key.hashCode();
         int index = normalizeIndex(hash);
         for (Entry<K, V> e = table[index]; e != null; e = e.next) {
-            if (e.hash == hash && e.key.equals(key)) {
+            if (e.key.equals(key)) {
                 V old = e.value;
                 e.value = value;
                 return old;
@@ -151,10 +154,10 @@ public class NodeBasedHashTableSeparateChaining<K, V> implements Hashable<K, V>,
     }
 
     private void addEntry(int hash, int index, K key, V value) {
-//        if (count >= threshold) {
-//            resizeTable(capacity * 2);
-//            index = normalizeIndex(hash);
-//        }
+        if (count >= threshold) {
+            resizeTable(capacity * 2);
+            index = normalizeIndex(hash);
+        }
         Entry<K, V> e = table[index];
         table[index] = new Entry<>(key, value, e);
         count++;
@@ -185,13 +188,13 @@ public class NodeBasedHashTableSeparateChaining<K, V> implements Hashable<K, V>,
         int index = normalizeIndex(hash);
 
         Entry<K, V> entry = table[index];
-        Entry<K,V> prev = null;
+        Entry<K, V> prev = null;
 
-        while(entry != null){
-            if(entry.key.equals(key)){
-                if(prev != null){
+        while (entry != null) {
+            if (entry.key.equals(key)) {
+                if (prev != null) {
                     prev.next = entry.next;
-                }else {
+                } else {
                     table[index] = entry.next;
                 }
                 count--;
@@ -265,23 +268,47 @@ public class NodeBasedHashTableSeparateChaining<K, V> implements Hashable<K, V>,
     }
 
     public static void main(String[] args) {
-        NodeBasedHashTableSeparateChaining<Integer, Integer> custom = new NodeBasedHashTableSeparateChaining<>(100);
+        NodeBasedHashTableSeparateChaining<TestKey, TestValue> custom = new NodeBasedHashTableSeparateChaining<>(10);
 
         for (int i = 0; i < 20; i++) {
-            custom.put(i, i);
+            custom.put(new TestKey(i), new TestValue(i));
         }
+
+        custom.put(new TestKey(0), new TestValue(199));
+
 
         System.out.println(custom);
 
         System.out.println("Is empty: " + custom.isEmpty());
         System.out.println("Count: " + custom.size());
-        System.out.println("GET: " + custom.get(19));
-        System.out.println("Contains key 14: " + custom.containsKey(14));
-        System.out.println("ContainsValue 17: " + custom.containsValue(17));
-        System.out.println("Removed value: " + custom.remove(1));
+        System.out.println("GET: " + custom.get(new TestKey(19)));
+        System.out.println("Contains key 14: " + custom.containsKey(new TestKey(14)));
+        System.out.println("ContainsValue 17: " + custom.containsValue(new TestValue(17)));
+        System.out.println("Removed value: " + custom.remove(new TestKey(1)));
         System.out.println("Count: " + custom.size());
 
         System.out.println(custom);
 
     }
+//
+//    public static void main(String[] args) {
+//        NodeBasedHashTableSeparateChaining<Integer, Integer> custom = new NodeBasedHashTableSeparateChaining<>(100);
+//
+//        for (int i = 0; i < 20; i++) {
+//            custom.put(i, i);
+//        }
+//
+//        System.out.println(custom);
+//
+//        System.out.println("Is empty: " + custom.isEmpty());
+//        System.out.println("Count: " + custom.size());
+//        System.out.println("GET: " + custom.get(19));
+//        System.out.println("Contains key 14: " + custom.containsKey(14));
+//        System.out.println("ContainsValue 17: " + custom.containsValue(17));
+//        System.out.println("Removed value: " + custom.remove(1));
+//        System.out.println("Count: " + custom.size());
+//
+//        System.out.println(custom);
+//
+//    }
 }
