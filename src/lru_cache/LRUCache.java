@@ -74,35 +74,44 @@ class LRUCache<K, V> implements Lru<K, V> {
             node.value = value;
             setRecentlyUsed(node);
         } else {
-            if (count >= capacity) {
-                removeLeastUsed();
-                count--;
-            }
-
-            if (isEmpty()) {
-                table[index] = head = tail = new Node<>(key, value, null, null);
-            } else {
-                head.prev = new Node<>(key, value, null, head);
-                head = head.prev;
-                table[index] = head;
-            }
-            count++;
+            add(index, key, value);
         }
     }
 
+    private void add(int index, K key, V value) {
+        if (count >= capacity) {
+            removeLeastUsed();
+            count--;
+        }
+
+        if (isEmpty()) {
+            table[index] = head = tail = new Node<>(key, value, null, null);
+        } else {
+            table[index] = head.prev = new Node<>(key, value, null, head);
+            head = head.prev;
+        }
+        count++;
+    }
+
     private void setRecentlyUsed(Node<K, V> node) {
-        //If node.prev == null -> this node is already current head;
-        if (node.prev != null) {
-            //Reset links from previous node to the next
-            //to be able to move this node to the start of the list
+        //If we need to change usage for head of if there is
+        //only one item in the cache -> do nothing
+        if (node.prev == null) {
+            return;
+        } else if (node.next == null) {
+            //Reset tail
+            node.prev.next = null;
+            tail = node.prev;
+        } else {
+            //Remove item from the middle
             node.prev.next = node.next;
             node.next.prev = node.prev;
-            //Set this node as the head of the list
-            node.prev = null;
-            node.next = head;
-            head.prev = node;
-            head = node;
         }
+        //Reset head
+        node.prev = null;
+        node.next = head;
+        head.prev = node;
+        head = head.prev;
     }
 
     private void removeLeastUsed() {
@@ -177,23 +186,15 @@ class LRUCache<K, V> implements Lru<K, V> {
 
         System.out.println(cache);
 
+        System.out.println("GET: " + cache.get("Key" + 0));
+
+        System.out.println(cache);
+
         cache.put("Key" + 2, "Value" + 99);
 
         System.out.println(cache);
 
-        System.out.println("GET: " + cache.get("Key" + 3));
-
-        System.out.println(cache);
-
         cache.put("Key" + 7, "Value" + 7);
-
-        System.out.println(cache);
-
-        cache.put("Key" + 16, "Value" + 23);
-
-        System.out.println(cache);
-
-        cache.put("Key" + 100, "Value" + 100);
 
         System.out.println(cache);
 
