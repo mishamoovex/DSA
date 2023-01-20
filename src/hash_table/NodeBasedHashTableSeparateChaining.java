@@ -169,13 +169,17 @@ public class NodeBasedHashTableSeparateChaining<K, V> implements Hashable<K, V>,
 
         Entry<K, V>[] newTable = (Entry<K, V>[]) new Entry[capacity];
 
-        for (int i = 0; i < table.length; i++) {
-            for (Entry<K, V> e = table[i]; e != null; e = e.next) {
-                int hashIndex = normalizeIndex(e.hash);
-                e.next = newTable[hashIndex];
-                newTable[hashIndex] = e;
+        for (Entry<K, V> bucket : table) {
+            Entry<K, V> e = bucket;
+            while (e != null) {
+                Entry<K, V> tmp = e.next;
+
+                int index = normalizeIndex(e.key.hashCode());
+                e.next = newTable[index];
+                newTable[index] = e;
+
+                e = tmp;
             }
-            table[i] = null;
         }
         table = newTable;
     }
@@ -268,7 +272,7 @@ public class NodeBasedHashTableSeparateChaining<K, V> implements Hashable<K, V>,
     }
 
     public static void main(String[] args) {
-        NodeBasedHashTableSeparateChaining<TestKey, TestValue> custom = new NodeBasedHashTableSeparateChaining<>(10);
+        NodeBasedHashTableSeparateChaining<TestKey, TestValue> custom = new NodeBasedHashTableSeparateChaining<>(3);
 
         for (int i = 0; i < 20; i++) {
             custom.put(new TestKey(i), new TestValue(i));
@@ -284,31 +288,11 @@ public class NodeBasedHashTableSeparateChaining<K, V> implements Hashable<K, V>,
         System.out.println("GET: " + custom.get(new TestKey(19)));
         System.out.println("Contains key 14: " + custom.containsKey(new TestKey(14)));
         System.out.println("ContainsValue 17: " + custom.containsValue(new TestValue(17)));
-        System.out.println("Removed value: " + custom.remove(new TestKey(1)));
+        System.out.println("Removed value: " + custom.remove(new TestKey(0)));
         System.out.println("Count: " + custom.size());
 
         System.out.println(custom);
 
     }
-//
-//    public static void main(String[] args) {
-//        NodeBasedHashTableSeparateChaining<Integer, Integer> custom = new NodeBasedHashTableSeparateChaining<>(100);
-//
-//        for (int i = 0; i < 20; i++) {
-//            custom.put(i, i);
-//        }
-//
-//        System.out.println(custom);
-//
-//        System.out.println("Is empty: " + custom.isEmpty());
-//        System.out.println("Count: " + custom.size());
-//        System.out.println("GET: " + custom.get(19));
-//        System.out.println("Contains key 14: " + custom.containsKey(14));
-//        System.out.println("ContainsValue 17: " + custom.containsValue(17));
-//        System.out.println("Removed value: " + custom.remove(1));
-//        System.out.println("Count: " + custom.size());
-//
-//        System.out.println(custom);
-//
-//    }
+
 }
