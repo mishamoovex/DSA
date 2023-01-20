@@ -84,7 +84,7 @@ class LRUCache<K, V> implements Lru<K, V> {
             count--;
         }
 
-        if (isEmpty()) {
+        if (isEmpty() || capacity == 1) {
             table[index] = head = tail = new Node<>(key, value, null, null);
         } else {
             table[index] = head.prev = new Node<>(key, value, null, head);
@@ -120,12 +120,15 @@ class LRUCache<K, V> implements Lru<K, V> {
         int hash = t.key.hashCode();
         int index = normalizeIndex(hash);
         table[index] = null;
-        //Reset the tail of the list
-        tail = t.prev;
-        tail.next = null;
-        //Clean up data from the evicted tail
-        t.value = null;
-        t.prev = null;
+
+        if (capacity != 1) {
+            //Reset the tail of the list
+            tail = t.prev;
+            tail.next = null;
+            //Clean up data from the evicted tail
+            t.value = null;
+            t.prev = null;
+        }
     }
 
     private int normalizeIndex(int hashCode) {
@@ -178,9 +181,9 @@ class LRUCache<K, V> implements Lru<K, V> {
     }
 
     public static void main(String[] args) {
-        Lru<String, String> cache = new LRUCache<>(5);
+        Lru<String, String> cache = new LRUCache<>(1);
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 1; i++) {
             cache.put("Key" + i, "Value" + i);
         }
 
