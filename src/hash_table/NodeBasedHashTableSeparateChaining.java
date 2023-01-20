@@ -151,10 +151,10 @@ public class NodeBasedHashTableSeparateChaining<K, V> implements Hashable<K, V>,
     }
 
     private void addEntry(int hash, int index, K key, V value) {
-        if (count >= threshold) {
-            resizeTable(capacity * 2);
-            index = normalizeIndex(hash);
-        }
+//        if (count >= threshold) {
+//            resizeTable(capacity * 2);
+//            index = normalizeIndex(hash);
+//        }
         Entry<K, V> e = table[index];
         table[index] = new Entry<>(key, value, e);
         count++;
@@ -178,7 +178,32 @@ public class NodeBasedHashTableSeparateChaining<K, V> implements Hashable<K, V>,
     }
 
     @Override
-    public V remove(Object key) {
+    public V remove(K key) {
+        checkKeyNotNull(key);
+
+        int hash = key.hashCode();
+        int index = normalizeIndex(hash);
+
+        Entry<K, V> entry = table[index];
+        Entry<K,V> prev = null;
+
+        while(entry != null){
+            if(entry.key.equals(key)){
+                if(prev != null){
+                    prev.next = entry.next;
+                }else {
+                    table[index] = entry.next;
+                }
+                count--;
+
+                V oldValue = entry.value;
+                entry.value = null;
+                entry.next = null;
+                return oldValue;
+            }
+            prev = entry;
+            entry = entry.next;
+        }
         return null;
     }
 
@@ -228,8 +253,7 @@ public class NodeBasedHashTableSeparateChaining<K, V> implements Hashable<K, V>,
      * will always be positive.
      */
     private int normalizeIndex(int hashCode) {
-//         return (hashCode & 0x7FFFFFFF) % capacity;
-        return (hashCode % 2) == 0 ? 1 : 2;
+        return (hashCode & 0x7FFFFFFF) % capacity;
     }
 
     private void checkKeyNotNull(K key) {
@@ -241,7 +265,7 @@ public class NodeBasedHashTableSeparateChaining<K, V> implements Hashable<K, V>,
     }
 
     public static void main(String[] args) {
-        NodeBasedHashTableSeparateChaining<Integer, Integer> custom = new NodeBasedHashTableSeparateChaining<>(4);
+        NodeBasedHashTableSeparateChaining<Integer, Integer> custom = new NodeBasedHashTableSeparateChaining<>(100);
 
         for (int i = 0; i < 20; i++) {
             custom.put(i, i);
@@ -250,13 +274,14 @@ public class NodeBasedHashTableSeparateChaining<K, V> implements Hashable<K, V>,
         System.out.println(custom);
 
         System.out.println("Is empty: " + custom.isEmpty());
-
-        custom.clear();
+        System.out.println("Count: " + custom.size());
+        System.out.println("GET: " + custom.get(19));
+        System.out.println("Contains key 14: " + custom.containsKey(14));
+        System.out.println("ContainsValue 17: " + custom.containsValue(17));
+        System.out.println("Removed value: " + custom.remove(1));
+        System.out.println("Count: " + custom.size());
 
         System.out.println(custom);
-
-        System.out.println("Is empty: " + custom.isEmpty());
-
 
     }
 }

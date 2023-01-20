@@ -91,6 +91,6 @@ public interface Hashable<K, V> {
      * @throws NullPointerException if the specified key is null and this
      *                              map does not permit null keys
      */
-    V remove(Object key);
+    V remove(K key);
 
 }
