@@ -2,74 +2,63 @@ package stack;
 
 import java.util.Arrays;
 import java.util.EmptyStackException;
-import java.util.Iterator;
 
 @SuppressWarnings("unchecked")
-public class ArrayStack<T> implements Stack<T>, Iterable<T> {
+public class ArrayStack<E> implements Stack<E> {
 
-    private int length;
-    private int capacity;
-    private T[] arr;
+    private int count;
+    private E[] arr;
 
     public ArrayStack(int capacity) {
-        if (capacity < 0) throw new IllegalArgumentException("Capacity should be grater then 0");
-        this.capacity = capacity;
-        arr = (T[]) new Object[capacity];
+        if (capacity < 6) throw new IllegalArgumentException("Capacity should be grater then 0");
+        arr = (E[]) new Object[capacity];
+    }
+
+    public ArrayStack() {
+        this(6);
     }
 
     @Override
     public int size() {
-        return length;
+        return count;
     }
 
     @Override
     public boolean isEmpty() {
-        return length == 0;
+        return count == 0;
     }
 
     @Override
-    public void push(T elem) {
-        if (length == capacity) {
-            increaseCapacity();
+    public void push(E elem) {
+        if (count >= arr.length) {
+            resize(arr.length * 2);
         }
-        arr[length++] = elem;
+        arr[count++] = elem;
     }
 
-    private void increaseCapacity() {
-        capacity *= 2;
-        arr = Arrays.copyOf(arr, capacity);
+    private void resize(int capacity) {
+        E[] copy = (E[]) new Object[capacity];
+        for (int i = 0; i < count; i++) {
+            copy[i] = arr[i];
+        }
+        arr = copy;
     }
 
     @Override
-    public T pop() {
+    public E pop() {
         checkNotEmpty();
-        T element = arr[--length];
-        arr[length] = null;
+        E element = arr[--count];
+        arr[count] = null;
+        if (count > 0 && count == arr.length / 4) {
+            resize(arr.length / 2);
+        }
         return element;
     }
 
     @Override
-    public T peek() {
+    public E peek() {
         checkNotEmpty();
-        return arr[length - 1];
-    }
-
-    @Override
-    public Iterator<T> iterator() {
-        return new Iterator<>() {
-
-            private int index = 0;
-
-            @Override
-            public boolean hasNext() {
-                return index < length;
-            }
-
-            @Override
-            public T next() {
-                return arr[index++];
-            }
-        };
+        return arr[count - 1];
     }
 
     @Override
@@ -78,7 +67,7 @@ public class ArrayStack<T> implements Stack<T>, Iterable<T> {
             return "[]";
         } else {
             StringBuilder sb = new StringBuilder().append("[");
-            for (int i = 0; i < length; i++) {
+            for (int i = 0; i < count; i++) {
                 if (i != 0) {
                     sb.append(", ");
                 }

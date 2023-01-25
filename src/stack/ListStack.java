@@ -1,67 +1,95 @@
 package stack;
 
 import java.util.EmptyStackException;
-import java.util.Iterator;
-import java.util.LinkedList;
 
-public class ListStack<T> implements Stack<T>, Iterable<T> {
+public class ListStack<T> implements Stack<T> {
 
-    private final LinkedList<T> list = new LinkedList<>();
+    private int size;
+    private Node<T> tail;
+    private Node<T> head;
 
-    //Create an empty Stack
-    public ListStack() {
+    private static class Node<T> {
+        public T data;
+        public Node<T> prev;
+        public Node<T> next;
+
+        public Node(T data, Node<T> prev, Node<T> next) {
+            this.data = data;
+            this.prev = prev;
+            this.next = next;
+        }
     }
 
-    //Create a Stack with an initial element
-    public ListStack(T element) {
-        push(element);
-    }
-
-    //Return the number of elements in the Stack
     @Override
     public int size() {
-        return list.size();
+        return size;
     }
 
-    //Check is the Stack is empty
     @Override
     public boolean isEmpty() {
-        return list.size() == 0;
+        return size <= 0;
     }
 
-    //Push an element on the Stack
     @Override
-    public void push(T element) {
-        list.addLast(element);
+    public void push(T elem) {
+        if (isEmpty()) {
+            tail = head = new Node<>(elem, null, null);
+        } else {
+            tail.next = new Node<>(elem, tail, null);
+            tail = tail.next;
+        }
+        size++;
     }
 
-    //Pop an element off the Stack
-    //Throws an error is the Stack is empty
     @Override
     public T pop() {
         checkNotEmpty();
-        return list.removeLast();
+
+        Node<T> prev = tail.prev;
+        T value = tail.data;
+        tail.data = null;
+        tail.prev = null;
+        tail = prev;
+        if (tail == null) {
+            head.data = null;
+            head.next = null;
+            head = null;
+        } else {
+            tail.next = null;
+            if (tail.prev == null) {
+                head.next = null;
+            }
+        }
+        size--;
+        return value;
     }
 
-    //Peek the top of the stack without removing an element
-    //Throws an exception if the stack is empty
     @Override
     public T peek() {
-        checkNotEmpty();
-        return list.getLast();
+        return tail.data;
     }
 
-    @Override
-    public Iterator<T> iterator() {
-        return list.iterator();
+    private void checkNotEmpty() {
+        if (isEmpty()) {
+            throw new EmptyStackException();
+        }
     }
 
     @Override
     public String toString() {
-        return list.toString();
-    }
-
-    private void checkNotEmpty() {
-        if (isEmpty()) throw new EmptyStackException();
+        if (isEmpty()) {
+            return "[]";
+        } else {
+            StringBuilder sb = new StringBuilder().append("[");
+            Node<T> trav = head;
+            while (trav != null) {
+                sb.append(trav.data);
+                trav = trav.next;
+                if (trav != null) {
+                    sb.append(", ");
+                }
+            }
+            return sb.append("]").toString();
+        }
     }
 }
