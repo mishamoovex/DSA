@@ -50,6 +50,11 @@ public class NodeQueue<T> implements Queue<T> {
             back = null;
         } else {
             front.prev = null;
+            //Check if there is only one item remaining in the collection
+            //If it is we also need to remove prev link from the back
+            if(front.next == null){
+                back.prev = null;
+            }
         }
         size--;
         return removedValue;
