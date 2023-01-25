@@ -1,166 +1,99 @@
 package queue.deque;
 
-import java.util.Iterator;
-import java.util.NoSuchElementException;
+/**
+ * A linear collection that supports element insertion and removal at
+ * both ends.  The name <i>deque</i> is short for "double ended queue"
+ * and is usually pronounced "deck".  Most {@code Deque}
+ * implementations place no fixed limits on the number of elements
+ * they may contain, but this interface supports capacity-restricted
+ * deques as well as those with no fixed size limit.
+ */
+public interface Deque<E> {
 
-public class Deque<Item> implements Iterable<Item> {
+    /**
+     * Inserts the specified element at the front of this deque unless it would
+     * violate capacity restrictions.
+     *
+     * @param e the element to add
+     * @return {@code true} if the element was added to this deque, else
+     * {@code false}
+     * @throws NullPointerException if the specified element is null and this
+     *                              deque does not permit null elements
+     */
+    boolean offerFirst(E e);
 
-    private int n = 0;
-    private Node<Item> head, tail;
+    /**
+     * Inserts the specified element at the end of this deque unless it would
+     * violate capacity restrictions.
+     *
+     * @param e the element to add
+     * @return {@code true} if the element was added to this deque, else
+     * {@code false}
+     * @throws NullPointerException if the specified element is null and this
+     *                              deque does not permit null elements
+     */
+    boolean offerLast(E e);
 
-    private static class Node<Item> {
-        Item item;
-        Node<Item> prev, next;
+    /**
+     * Retrieves and removes the first element of this deque,
+     * or returns {@code null} if this deque is empty.
+     *
+     * @return the head of this deque, or {@code null} if this deque is empty
+     */
+    E pollFirst();
 
-        public Node(Item item, Node<Item> prev, Node<Item> next) {
-            this.item = item;
-            this.prev = prev;
-            this.next = next;
-        }
-    }
+    /**
+     * Retrieves and removes the last element of this deque,
+     * or returns {@code null} if this deque is empty.
+     *
+     * @return the tail of this deque, or {@code null} if this deque is empty
+     */
+    E pollLast();
 
-    // is the deque empty?
-    public boolean isEmpty() {
-        return n == 0;
-    }
+    /**
+     * Retrieves, but does not remove, the first element of this deque,
+     * or returns {@code null} if this deque is empty.
+     *
+     * @return the head of this deque, or {@code null} if this deque is empty
+     */
+    E peekFirst();
 
-    // return the number of items on the deque
-    public int size() {
-        return n;
-    }
+    /**
+     * Retrieves, but does not remove, the last element of this deque,
+     * or returns {@code null} if this deque is empty.
+     *
+     * @return the tail of this deque, or {@code null} if this deque is empty
+     */
+    E peekLast();
 
-    // add the item to the front
-    public void addFirst(Item item) {
-        checkNotNull(item);
-        if (isEmpty()) {
-            head = tail = new Node<>(item, null, null);
-        } else {
-            head.prev = new Node<>(item, null, head);
-            head = head.prev;
-        }
-        n++;
-    }
+    /**
+     * Returns the number of elements in this deque.
+     *
+     * @return the number of elements in this deque
+     */
+    int size();
 
-    // add the item to the back
-    public void addLast(Item item) {
-        checkNotNull(item);
-        if (isEmpty()) {
-            head = tail = new Node<>(item, null, null);
-        } else {
-            tail.next = new Node<>(item, tail, null);
-            tail = tail.next;
-        }
-        n++;
-    }
+    /**
+     * Returns {@code true} if this collection contains no elements.
+     *
+     * @return {@code true} if this collection contains no elements
+     */
+    boolean isEmpty();
 
-    // remove and return the item from the front
-    public Item removeFirst() {
-        checkNotEmpty();
-        Node<Item> new_head = head.next;
-        Item value = head.item;
-        head.item = null;
-        head.next = null;
-        head = new_head;
-        if (head == null) {
-            tail.item = null;
-            tail = null;
-        } else {
-            head.prev = null;
-        }
-        n--;
-        return value;
-    }
+    /**
+     * Removes all the elements from this collection.
+     */
+    void clear();
 
-    // remove and return the item from the back
-    public Item removeLast() {
-        checkNotEmpty();
-        Node<Item> new_tail = tail.prev;
-        Item value = tail.item;
-        tail.item = null;
-        tail.prev = null;
-        tail = new_tail;
-        if (tail == null) {
-            head.item = null;
-            head = null;
-        } else {
-            tail.next = null;
-        }
-        n--;
-        return value;
-    }
-
-    private void checkNotNull(Item item) {
-        if (item == null) {
-            throw new IllegalArgumentException();
-        }
-    }
-
-    private void checkNotEmpty() {
-        if (isEmpty()) {
-            throw new NoSuchElementException();
-        }
-    }
-
-    @Override
-    public Iterator<Item> iterator() {
-        return new Iterator<>() {
-            private Node<Item> trav = head;
-
-            @Override
-            public boolean hasNext() {
-                return trav != null;
-            }
-
-            @Override
-            public Item next() {
-                Item item = trav.item;
-                trav = trav.next;
-                if (trav == null) {
-                    throw new NoSuchElementException();
-                }
-                return item;
-            }
-
-            @Override
-            public void remove() {
-                throw new UnsupportedOperationException();
-            }
-        };
-    }
-
-    @Override
-    public String toString() {
-        if (isEmpty()) {
-            return "[]";
-        } else {
-            StringBuilder sb = new StringBuilder().append("[");
-            Node<Item> trav = head;
-            while (trav != null) {
-                sb.append(trav.item);
-                trav = trav.next;
-                if (trav != null) {
-                    sb.append(", ");
-                }
-            }
-            return sb.append("]").toString();
-        }
-    }
-
-    public static void main(String[] args) {
-        Deque<Integer> custom = new Deque<>();
-
-        custom.addFirst(1);
-        custom.addFirst(2);
-        custom.addLast(3);
-        custom.addLast(4);
-
-        System.out.println(custom);
-        System.out.println(custom.isEmpty());
-        System.out.println(custom.size());
-
-        custom.removeFirst();
-        custom.removeLast();
-
-        System.out.println(custom);
-    }
+    /**
+     * Returns {@code true} if this deque contains the specified element.
+     *
+     * @param e element whose presence in this deque is to be tested
+     * @return {@code true} if this deque contains the specified element
+     * @throws NullPointerException if the specified element is null and this
+     *                              deque does not permit null elements
+     */
+    boolean contains(E e);
 }
+
+
