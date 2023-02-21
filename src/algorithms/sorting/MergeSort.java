@@ -13,7 +13,6 @@ package algorithms.sorting;
  * This sorting algorithm is stable.
  * It uses &Theta;(<em>n</em>) extra memory (not including the input array).
  */
-@SuppressWarnings("rawtypes")
 public class MergeSort {
 
     /**
@@ -21,8 +20,8 @@ public class MergeSort {
      *
      * @param a the array to be sorted
      */
-    public static <T extends Comparable<T>> void sort(T[] a) {
-        Comparable[] aux = new Comparable[a.length];
+    public static <T extends Comparable<T>> void mergeSort(T[] a) {
+        T[] aux = (T[]) new Object[a.length];
         sort(a, aux, 0, a.length - 1);
         assert isSorted(a);
     }
